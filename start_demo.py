@@ -1,0 +1,244 @@
+#!/usr/bin/env python3
+"""
+Agbara Quick Start - Local API Server
+Run this for local testing without GPU requirements.
+"""
+
+import os
+import sys
+import json
+import time
+import uuid
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
+
+# Add src to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Simple request handler for testing
+class AgbaraHandler(BaseHTTPRequestHandler):
+    
+    def log_message(self, format, *args):
+        print(f"[{self.log_date_time_string()}] {format % args}")
+    
+    def send_json(self, data, status=200):
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps(data).encode())
+    
+    def do_GET(self):
+        parsed = urlparse(self.path)
+        
+        if parsed.path == '/health':
+            self.send_json({
+                'status': 'healthy',
+                'version': '1.0.0',
+                'timestamp': time.time()
+            })
+        
+        elif parsed.path == '/v1/models':
+            self.send_json({
+                'object': 'list',
+                'data': [
+                    {'id': 'agbara', 'object': 'model', 'created': int(time.time()), 'owned_by': 'agbara-ai'},
+                    {'id': 'agbara-igbo', 'object': 'model', 'created': int(time.time()), 'owned_by': 'agbara-ai'},
+                ]
+            })
+        
+        elif parsed.path == '/v1/status':
+            self.send_json({
+                'version': '1.0.0',
+                'mode': 'demo',
+                'igbo_enabled': True
+            })
+        
+        elif parsed.path == '/v1/igbo/proverb':
+            # Return a sample Igbo proverb
+            proverbs = [
+                {
+                    'igbo': 'Egbe bere ugo bere',
+                    'english': 'Let the kite perch and let the eagle perch',
+                    'meaning': 'Live and let live; tolerance and peaceful coexistence',
+                    'category': 'philosophy'
+                },
+                {
+                    'igbo': 'Mmadu abughi Chi ya',
+                    'english': 'A person is not their own god',
+                    'meaning': 'Humans are not omnipotent; humility is necessary',
+                    'category': 'philosophy'
+                },
+                {
+                    'igbo': 'Aka aja aja na-ewute ọnụ nnyu mmiri',
+                    'english': 'A sandy hand brings a mouth that tastes water',
+                    'meaning': 'Hard work brings satisfaction',
+                    'category': 'wisdom'
+                }
+            ]
+            import random
+            self.send_json(random.choice(proverbs))
+        
+        else:
+            self.send_json({'error': 'Not found'}, 404)
+    
+    def do_POST(self):
+        parsed = urlparse(self.path)
+        content_length = int(self.headers.get('Content-Length', 0))
+        body = self.rfile.read(content_length).decode() if content_length > 0 else '{}'
+        
+        try:
+            data = json.loads(body)
+        except:
+            self.send_json({'error': 'Invalid JSON'}, 400)
+            return
+        
+        if parsed.path == '/v1/chat/completions':
+            messages = data.get('messages', [])
+            last_message = messages[-1] if messages else {}
+            query = last_message.get('content', '')
+            
+            # Check for Igbo mode
+            model = data.get('model', 'agbara')
+            igbo_mode = 'igbo' in model.lower()
+            
+            # Generate response
+            if igbo_mode:
+                response = self._generate_igbo_response(query)
+            else:
+                response = self._generate_response(query, model)
+            
+            self.send_json({
+                'id': f'chatcmpl-{uuid.uuid4().hex[:24]}',
+                'object': 'chat.completion',
+                'created': int(time.time()),
+                'model': model,
+                'choices': [{
+                    'index': 0,
+                    'message': {
+                        'role': 'assistant',
+                        'content': response
+                    },
+                    'finish_reason': 'stop'
+                }],
+                'usage': {
+                    'prompt_tokens': len(query.split()),
+                    'completion_tokens': len(response.split()),
+                    'total_tokens': len(query.split()) + len(response.split())
+                }
+            })
+        
+        else:
+            self.send_json({'error': 'Not found'}, 404)
+    
+    def _generate_response(self, query, model):
+        """Generate a demo response."""
+        responses = {
+            'agbara': f"""[Agbara Demo Response]
+
+You asked: "{query}"
+
+This is a demonstration of the Agbara API. In production, this would be generated by a powerful mixture-of-experts system combining:
+
+- Llama 4 70B (reasoning)
+- Qwen 3 72B (multilingual)
+- DeepSeek Coder (code)
+- Mistral 7B (fast responses)
+- Igbo Language Expert
+
+The full system requires GPU deployment on RunPod (A100 80GB recommended).
+
+GitHub: https://github.com/Satoshi-NaAkokwa/agbara
+""",
+            'agbara-code': f"""[Agbara Code Expert Demo]
+
+```python
+# Response to: {query}
+
+# This is a demo. In production, CodeLlama/DeepSeek Coder would generate actual code.
+
+def example_function():
+    pass
+```"""
+        }
+        return responses.get(model, responses['agbara'])
+    
+    def _generate_igbo_response(self, query):
+        """Generate an Igbo-focused response."""
+        query_lower = query.lower()
+        
+        # Check for greeting
+        if any(w in query_lower for w in ['hello', 'hi', 'kedu', 'ndewo']):
+            return """Ndewo! Kedu ka i mere? (Hello! How are you?)
+
+I'm the Agbara Igbo Language Expert. I can help you with:
+- Igbo proverbs (ilu) and their meanings
+- Translations between Igbo and English
+- Cultural concepts like chi, omenala, ndichie
+- Igbo vocabulary and phrases
+
+Try asking me: "Tell me an Igbo proverb" or "What does chi mean?"
+"""
+        
+        # Check for proverb request
+        if 'proverb' in query_lower or 'ilu' in query_lower:
+            return """**Igbo Proverb (Il Igbo):**
+
+> "Egbe bere ugo bere"
+
+**English Translation:**
+> "Let the kite perch and let the eagle perch"
+
+**Meaning:**
+Live and let live; tolerance and peaceful coexistence. This proverb teaches us that everyone deserves the freedom to live and thrive, regardless of their differences.
+
+Would you like to hear more Igbo proverbs?"""
+        
+        # Default response
+        return f"""Daalụ maka ajụjụ gị! (Thank you for your question!)
+
+You asked: "{query}"
+
+In production, the Igbo Language Expert would provide detailed responses about Igbo language, culture, proverbs, and translations. This demo showcases the API structure.
+
+For full Igbo capabilities, deploy Agbara on RunPod with GPU support.
+"""
+
+
+def main():
+    port = int(os.environ.get('AGBARA_PORT', 8000))
+    host = os.environ.get('AGBARA_HOST', '0.0.0.0')
+    
+    print(f"""
+╔═══════════════════════════════════════════════════════════╗
+║                    AGBARA DEMO API                        ║
+║                  Version: 1.0.0                           ║
+╠═══════════════════════════════════════════════════════════╣
+║  Endpoints:                                               ║
+║    GET  /health              Health check                 ║
+║    GET  /v1/models           List models                  ║
+║    GET  /v1/igbo/proverb     Get Igbo proverb             ║
+║    POST /v1/chat/completions Chat completion              ║
+╠═══════════════════════════════════════════════════════════╣
+║  API Key: agbara-demo-key                                 ║
+║  Example:                                                 ║
+║    curl http://localhost:{port}/v1/chat/completions \\     ║
+║      -H "Authorization: Bearer agbara-demo-key" \\         ║
+║      -H "Content-Type: application/json" \\                ║
+║      -d '{{"model":"agbara","messages":[{{"role":"user","content":"Hello"}}]}}' ║
+╚═══════════════════════════════════════════════════════════╝
+""")
+    
+    server = HTTPServer((host, port), AgbaraHandler)
+    print(f"🚀 Server running on http://{host}:{port}")
+    print("Press Ctrl+C to stop\n")
+    
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n\nShutting down...")
+        server.shutdown()
+
+
+if __name__ == '__main__':
+    main()
