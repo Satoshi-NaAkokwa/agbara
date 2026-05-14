@@ -1,0 +1,49 @@
+# Agbara LLM Integration for OpenClaw
+# Add this to your OpenClaw configuration
+
+agbara:
+  # Agbara API Configuration
+  api_base: "http://localhost:8000/v1"
+  api_key: "agbara_sk_live_f7a9b2c4d6e8f0a1b2c3d4e5f6a7b8c9"
+  
+  # Available Models
+  models:
+    default: "agbara"
+    igbo: "agbara-igbo"
+    code: "agbara-code"
+  
+  # Model Capabilities
+  capabilities:
+    agbara:
+      - chat
+      - reasoning
+      - multilingual
+    agbara-igbo:
+      - chat
+      - translation
+      - proverbs
+      - cultural_knowledge
+    agbara-code:
+      - chat
+      - code_generation
+      - debugging
+  
+  # Igbo-specific Settings
+  igbo:
+    enabled: true
+    proverbs_enabled: true
+    cultural_context: true
+    translation_mode: "bidirectional"
+  
+  # Performance Settings
+  performance:
+    max_tokens: 4096
+    temperature: 0.7
+    stream_enabled: true
+    cache_enabled: true
+
+# Integration Instructions:
+# 1. Add this configuration to your OpenClaw gateway config
+# 2. Set AGBARA_API_KEY environment variable
+# 3. Restart OpenClaw gateway
+# 4. Use with: model="agbara" or model="agbara-igbo"

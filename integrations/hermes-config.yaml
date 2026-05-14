@@ -1,0 +1,65 @@
+# Agbara LLM Integration for Hermes Agent
+# Add this configuration to your Hermes settings
+
+hermes:
+  llm_provider: "agbara"
+  
+  # Agbara API Configuration
+  agbara:
+    api_base: "http://localhost:8000/v1"
+    api_key: "agbara_sk_live_f7a9b2c4d6e8f0a1b2c3d4e5f6a7b8c9"
+    
+    # Model Selection
+    models:
+      default: "agbara"
+      igbo: "agbara-igbo"
+      code: "agbara-code"
+    
+    # Agent-specific Settings
+    agent_config:
+      max_tokens: 4096
+      temperature: 0.7
+      system_prompt: |
+        You are Hermes, an intelligent AI assistant powered by Agbara.
+        You have access to Igbo language expertise and cultural knowledge.
+        
+        Capabilities:
+        - General reasoning and assistance
+        - Igbo language translation and proverbs
+        - Code generation and debugging
+        
+        Always be helpful, accurate, and culturally sensitive.
+    
+    # Igbo Language Settings
+    igbo_mode:
+      enabled: true
+      auto_detect: true
+      cultural_context: true
+    
+    # Tool Integration
+    tools:
+      - name: "get_igbo_proverb"
+        endpoint: "/v1/igbo/proverb"
+        description: "Get an Igbo proverb with translation"
+      
+      - name: "translate_igbo"
+        endpoint: "/v1/igbo/translate"
+        description: "Translate between Igbo and English"
+  
+  # Integration with LangChain/LangGraph
+  langchain:
+    enabled: true
+    wrapper_class: "agbara.integrations.HermesWrapper"
+
+# Usage Example:
+# 
+# from hermes import Hermes
+# 
+# # Initialize with Agbara
+# hermes = Hermes(config_path="hermes-agbara-config.yaml")
+# 
+# # Chat with Igbo support
+# response = hermes.chat("Tell me an Igbo proverb")
+# 
+# # Code generation
+# response = hermes.chat("Write a Python function", model="agbara-code")
