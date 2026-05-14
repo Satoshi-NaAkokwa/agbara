@@ -1,0 +1,87 @@
+# RunPod Serverless Template for Agbara
+# Deploy this to RunPod for GPU inference
+
+template:
+  name: "Agbara AI"
+  description: "The Self-Evolving Omni-Modal Intelligence System with Igbo Language Support"
+  version: "1.0.0"
+  author: "Agbara-Okenze"
+
+# GPU Configuration
+gpu:
+  type: "A100"  # A100 80GB recommended
+  count: 1
+  memory: 80  # GB
+
+# Alternative: H100 for maximum performance
+# gpu:
+#   type: "H100"
+#   count: 1
+#   memory: 80
+
+# Container Configuration
+container:
+  image: "ghcr.io/satoshi-naakokwa/agbara:latest"
+  # Or build from Dockerfile
+  # build: 
+  #   dockerfile: "Dockerfile"
+  #   context: "."
+
+  ports:
+    - 8000
+
+  env:
+    - name: AGBARA_GPU_MEMORY
+      value: "81920"  # 80GB in MB
+    - name: AGBARA_QUANTIZATION
+      value: "4bit"
+    - name: AGBARA_CACHE_DIR
+      value: "/app/cache"
+    - name: AGBARA_API_KEYS
+      value: "${AGBARA_API_KEY}"  # Set your API key
+
+  volumes:
+    - name: model-cache
+      path: /app/cache
+      size: 100  # GB
+
+# Serverless Configuration
+serverless:
+  # Scale to zero when idle
+  scaleToZero: true
+  # Idle timeout before scaling down (seconds)
+  idleTimeout: 300
+  # Minimum workers
+  minWorkers: 0
+  # Maximum workers
+  maxWorkers: 5
+  # Startup timeout (seconds)
+  startupTimeout: 300
+
+# Network Configuration
+network:
+  # Enable public API endpoint
+  publicApi: true
+  # Enable WebSocket for streaming
+  websockets: true
+
+# Storage Configuration
+storage:
+  # Model weights storage
+  - name: model-weights
+    type: network
+    size: 500  # GB
+    mountPath: /app/models
+
+# Health Check
+healthCheck:
+  endpoint: /health
+  intervalSeconds: 30
+  timeoutSeconds: 10
+  unhealthyThreshold: 3
+
+# Cost Estimation
+costs:
+  a100_80gb: $0.33/hour (RunPod)
+  estimated_tokens_per_dollar: 2_000_000
+  estimated_cost_per_million_tokens: $0.50

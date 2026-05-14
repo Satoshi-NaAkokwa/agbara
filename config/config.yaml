@@ -1,0 +1,134 @@
+# Agbara Configuration
+# Version: 1.0.0
+
+# System Settings
+system:
+  name: "Agbara"
+  version: "1.0.0"
+  log_level: "INFO"
+  cache_dir: "/tmp/agbara_cache"
+
+# GPU Settings
+gpu:
+  memory_mb: 81920  # 80GB
+  quantization: "4bit"  # Options: 4bit, 8bit, fp16
+  flash_attention: true
+  vllm: true
+
+# Expert Settings
+experts:
+  # Default experts to load on startup
+  warm_up:
+    - "mistral-7b"
+    - "igbo-language"
+  
+  # Maximum experts loaded simultaneously
+  max_loaded: 3
+  
+  # Expert eviction policy
+  eviction_policy: "lru"  # Options: lru, lfu
+
+# Router Settings
+router:
+  # Modality detection
+  auto_detect_modality: true
+  
+  # Complexity threshold for multi-expert fusion
+  fusion_threshold: 0.7
+  
+  # Igbo language detection sensitivity
+  igbo_detection_threshold: 0.3
+
+# Cache Settings
+cache:
+  # Semantic cache
+  semantic:
+    enabled: true
+    max_size: 10000
+    similarity_threshold: 0.95
+  
+  # KV cache
+  kv:
+    enabled: true
+    max_size: 1000
+
+# Memory Settings
+memory:
+  # Maximum episodic memory entries
+  max_episodic: 100
+  
+  # Maximum working memory entries
+  max_working: 10
+  
+  # Persist memory to disk
+  persist: true
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  
+  # Authentication
+  auth:
+    enabled: true
+    header: "Authorization"
+    prefix: "Bearer"
+  
+  # Rate limiting
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+  
+  # CORS
+  cors:
+    enabled: true
+    origins: ["*"]
+
+# Igbo Expert Settings
+igbo:
+  enabled: true
+  
+  # Proverb categories
+  proverb_categories:
+    - "wisdom"
+    - "philosophy"
+    - "humor"
+    - "advice"
+  
+  # Dialect support
+  dialects:
+    - "standard"
+    - "owa"
+    - "onitsha"
+  
+  # Translation modes
+  translation:
+    igbo_to_english: true
+    english_to_igbo: true
+    cultural_context: true
+
+# Monitoring Settings
+monitoring:
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+    port: 9090
+  
+  # Health checks
+  health_check:
+    enabled: true
+    interval_seconds: 30
+
+# Performance Tuning
+performance:
+  # Batch size for inference
+  batch_size: 1
+  
+  # Maximum sequence length
+  max_sequence_length: 4096
+  
+  # Streaming chunk size
+  streaming_chunk_size: 20
+  
+  # Token estimation
+  tokens_per_word: 1.3

@@ -1,0 +1,198 @@
+# Igbo Culture Configuration
+# Language: Igbo (ig)
+# Region: Nigeria, West Africa
+
+culture:
+  name: "Igbo"
+  native_name: "Igbo"
+  language_code: "ig"
+  region: "Southeastern Nigeria"
+  
+  # Population
+  population:
+    native_speakers: 45_000_000
+    total_speakers: 50_000_000
+    diaspora: 5_000_000
+  
+  # Dialects
+  dialects:
+    - name: "Standard Igbo"
+      code: "ig-standard"
+      description: "Standardized written Igbo (Igbo Izugbe)"
+      
+    - name: "Owerri"
+      code: "ig-owerri"
+      description: "Spoken in Owerri region"
+      
+    - name: "Onitsha"
+      code: "ig-onitsha"
+      description: "Spoken in Onitsha region"
+      
+    - name: "Enuani"
+      code: "ig-enuani"
+      description: "Spoken in Delta Igbo region"
+      
+    - name: "Ngwa"
+      code: "ig-ngwa"
+      description: "Spoken in Abia State"
+  
+  # Writing System
+  writing:
+    script: "Latin"
+    special_characters:
+      - "ị"  # i with dot below
+      - "ọ"  # o with dot below
+      - "ụ"  # u with dot below
+      - "ṅ"  # n with dot above
+      - "gb" # digraph
+      - "gh" # digraph
+      - "kp" # digraph
+      - "kw" # digraph
+      - "nw" # digraph
+      - "ny" # digraph
+
+# Cultural Concepts
+concepts:
+  - name: "Chi"
+    definition: "Personal god or spiritual guide"
+    significance: "Central to Igbo spirituality; determines destiny"
+    usage_examples:
+      - "Chi m ga-eme ya (My chi will make it happen)"
+      - "Onye kwe, chi ya ekwe (If one agrees, their chi agrees)"
+    
+  - name: "Omenala"
+    definition: "Tradition, custom, culture"
+    significance: "The totality of Igbo cultural practices"
+    usage_examples:
+      - "Omenala anyị siri ike (Our traditions are strong)"
+    
+  - name: "Ndichie"
+    definition: "Ancestors"
+    significance: "Venerated and consulted in spirituality"
+    usage_examples:
+      - "Ndichie gọzie anyị (May the ancestors bless us)"
+    
+  - name: "Ala"
+    definition: "Land, earth"
+    significance: "Sacred; mother earth goddess"
+    usage_examples:
+      - "Ala bụ nne (The earth is mother)"
+    
+  - name: "Igwebuike"
+    definition: "There is strength in numbers/unity"
+    significance: "Philosophy of collective action"
+    usage_examples:
+      - "Igwebuike bụ ike anyị (Unity is our strength)"
+
+# Proverb Categories
+proverb_categories:
+  - name: "Wisdom"
+    igbo_name: "Amamife"
+    description: "Proverbs about wisdom and knowledge"
+    
+  - name: "Philosophy"
+    igbo_name: "Echiche"
+    description: "Philosophical proverbs about life"
+    
+  - name: "Leadership"
+    igbo_name: "Ọchịchị"
+    description: "Proverbs about leadership and power"
+    
+  - name: "Family"
+    igbo_name: "Ezinụlọ"
+    description: "Proverbs about family relationships"
+    
+  - name: "Work"
+    igbo_name: "Ọrụ"
+    description: "Proverbs about work and diligence"
+    
+  - name: "Unity"
+    igbo_name: "Ịdị n'otu"
+    description: "Proverbs about unity and cooperation"
+
+# Traditional Greetings
+greetings:
+  formal:
+    - "Ndewo" - "Hello (formal)"
+    - "Ọ dị mma ị hụ gị" - "It's good to see you"
+    - "Jisie ike" - "Well done / Keep it up"
+  
+  informal:
+    - "Kedu?" - "How are you?"
+    - "Kedu ka ị mere?" - "How did you do?"
+    - "Kedu ka i si nọ?" - "How are you doing?"
+  
+  time_based:
+    morning: "Ụtụtụ ọma" - "Good morning"
+    afternoon: "Ehihie ọma" - "Good afternoon"
+    evening: "Anyasị ọma" - "Good evening"
+    night: "Abalị ọma" - "Good night"
+
+# Important Values
+values:
+  - name: "Ụbụrụ"
+    english: "Wisdom"
+    description: "Valued as the highest virtue"
+    
+  - name: "Ịkwụgba"
+    english: "Integrity"
+    description: "Being trustworthy and reliable"
+    
+  - name: "Ịdị n'otu"
+    english: "Unity"
+    description: "Community solidarity"
+    
+  - name: "Nkwado"
+    english: "Support"
+    description: "Helping others in the community"
+    
+  - name: "Nsọpụrụ"
+    english: "Respect"
+    description: "Respect for elders and tradition"
+
+# Traditional Institutions
+institutions:
+  - name: "Ọzọ"
+    description: "Title-taking institution for respected elders"
+    
+  - name: "Ọha"
+    description: "Village assembly for decision-making"
+    
+  - name: "Umunna"
+    description: "Kinship group system"
+    
+  - name: "Age Grade"
+    igbo_name: "Ụmụ afọ"
+    description: "Age-based social organization"
+
+# Market Days
+market_days:
+  - name: "Eke"
+    description: "First market day"
+    
+  - name: "Orie"
+    description: "Second market day"
+    
+  - name: "Afor"
+    description: "Third market day"
+    
+  - name: "Nkwo"
+    description: "Fourth market day"
+
+# Traditional Religion Elements
+religion:
+  deities:
+    - name: "Chukwu"
+      description: "Supreme God"
+      
+    - name: "Ala"
+      description: "Earth goddess"
+      
+    - name: "Amadioha"
+      description: "God of thunder and justice"
+      
+    - name: "Anyanwu"
+      description: "Sun god"
+      
+    - name: "Ikenga"
+      description: "God of strength and achievement"
